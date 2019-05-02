@@ -10,12 +10,16 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     password: '',
+    inputPassword: '',
     water: new Water(),
     electricity: new Electricity(),
   },
   mutations: {
     setPassword(state, password) {
       state.password = password;
+    },
+    inputPassword(state, password) {
+      state.inputPassword = password;
     },
     addWater(state, unit: Unit) {
       state.water.addCollection(unit);
@@ -31,9 +35,6 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    setPassword(context, password) {
-      context.commit('setPassword', password);
-    },
     setWaterRules(context, rule) {
       context.commit('setWaterRules', rule);
     },
