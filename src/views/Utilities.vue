@@ -17,7 +17,7 @@
               @keyup="v => (v.code === 'Enter' ? submit() : undefined)"
               type="is-info"
               icon-pack="fas"
-              :min="getUtilities(type).getLast().number"
+              :min="getUtilities(type).getLast() && getUtilities(type).getLast().number"
             />
           </b-field>
           <b-field>

@@ -3,12 +3,8 @@ import { Line, mixins } from "vue-chartjs";
 
 export default {
   extends: Line,
-  mixins: [mixins.reactiveProp],
+  // mixins: [mixins.reactiveProp],
   props: {
-    chartData: {
-      type: Object,
-      default: null
-    },
     options: {
       type: Object,
       default: () => ({
@@ -30,6 +26,12 @@ export default {
           ]
         }
       })
+    }
+  },
+  watch: {
+    chartData() {
+      console.log('update chart data');
+      this.$data._chart.update();
     }
   },
   mounted() {
