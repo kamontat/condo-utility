@@ -103,7 +103,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      inputText: "",
+      inputText: 0,
       type: "electricity"
     };
   },
@@ -112,6 +112,8 @@ export default Vue.extend({
       return this.$route.query;
     },
     datasets(): object {
+      console.log("update new datasets");
+
       const data = this.getUtilities(this.type)
         .list()
         .map((d: Unit) => ({
