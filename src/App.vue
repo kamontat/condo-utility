@@ -1,13 +1,35 @@
 <template>
   <div id="app">
-    <input id="username" class="username" :value="inputPassword" @input="updatePassword">
-    <div id="nav">
-      <router-link :to="`/${passwordParam}`">Home</router-link> |
-      <router-link :to="`/utilities${passwordParam}&type=water`">Water</router-link> |
-      <router-link :to="`/utilities${passwordParam}&type=electricity`">Electricity</router-link> | 
-      <router-link :to="`/graph${passwordParam}`">Graph</router-link>
+    <div class="nav">
+      <div class="inputbar">
+        <section>
+          <b-field position="is-centered" type="is-dark">
+            <b-input
+              placeholder="Enter your code"
+              type="username"
+              :value="inputPassword"
+              @input="updatePassword"
+              icon-pack="fas"
+            />
+          </b-field>
+        </section>
+      </div>
+
+      <div class="tabs is-centered">
+        <ul>
+          <li :class="$route.name === 'home' ? 'is-active' : ''">
+            <router-link :to="`/${passwordParam}`">Home</router-link>
+          </li>
+          <li :class="$route.query && $route.query.type === 'water' ? 'is-active' : ''">
+            <router-link :to="`/utilities${passwordParam}&type=water`">Water</router-link>
+          </li>
+          <li :class="$route.query && $route.query.type === 'electricity' ? 'is-active' : ''">
+            <router-link :to="`/utilities${passwordParam}&type=electricity`">Electricity</router-link>
+          </li>
+        </ul>
+      </div>
     </div>
-    <router-view :key="$route.fullPath"/>
+    <router-view class="view" :key="$route.fullPath" />
   </div>
 </template>
 
@@ -33,14 +55,23 @@ export default Vue.extend({
 });
 </script>
 
-
 <style lang="scss">
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
+
   text-align: center;
-  color: #2c3e50;
+}
+
+.nav {
   margin-top: 60px;
+  margin-right: 24px;
+  margin-left: 24px;
+}
+
+.view {
+  margin-top: 45px;
 }
 </style>

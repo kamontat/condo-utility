@@ -9,11 +9,27 @@
         <label class="price">~{{ formatNumber(getUtilities(type).getMonthlyPrice()) }} THB</label>
       </p>
 
-      <input type="number" v-model="inputText" @keyup="v => (v.code === 'Enter' ? submit() : undefined)" />
-      <button @click="submit">Submit</button>
+      <div class="inputbar">
+        <b-field grouped position="is-centered">
+          <b-field>
+            <b-numberinput
+              v-model="inputText"
+              @keyup="v => (v.code === 'Enter' ? submit() : undefined)"
+              type="is-info"
+              icon-pack="fas"
+              :min="getUtilities(type).getLast().number"
+            />
+          </b-field>
+          <b-field>
+            <p class="control">
+              <button class="button is-info" @click="submit">Submit</button>
+            </p>
+          </b-field>
+        </b-field>
+      </div>
     </div>
 
-    <div :key="$route.fullPath">
+    <div class="chart" :key="$route.fullPath">
       <chart :chart-data="datasets"></chart>
     </div>
   </div>
@@ -148,8 +164,6 @@ export default Vue.extend({
       const method = `add${this.type.substr(0, 1).toUpperCase() + this.type.substring(1)}`;
 
       this.$store.commit(method, unit);
-
-      console.log(unit);
       db.ref(`${this.type}/${length}`).set(unit);
     }
   }
@@ -158,6 +172,18 @@ export default Vue.extend({
 
 <style lang="scss">
 .utilities {
-  margin-top: 60px;
+  margin-right: 30px;
+  margin-left: 30px;
+}
+
+.title {
+}
+
+.inputbar {
+  margin-top: 24px;
+  margin-bottom: 30px;
+}
+
+.chart {
 }
 </style>
