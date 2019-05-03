@@ -3,29 +3,37 @@ import { Line, mixins } from "vue-chartjs";
 
 export default {
   extends: Line,
+  mixins: [mixins.reactiveProp],
   props: {
-    chartdata: {
+    chartData: {
       type: Object,
       default: null
     },
     options: {
       type: Object,
-      default: null
+      default: () => ({
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          xAxes: [
+            {
+              type: "time",
+              distribution: "linear",
+              time: {
+                unit: "hour",
+                minUnit: "minute",
+                displayFormats: {
+                  hour: "D MMM (H:mm)"
+                }
+              }
+            }
+          ]
+        }
+      })
     }
   },
   mounted() {
-    this.renderChart(this.chartData, {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        xAxes: [
-          {
-            type: "time",
-            distribution: "series"
-          }
-        ]
-      }
-    });
+    this.renderChart(this.chartData, this.options);
   }
 };
 </script>

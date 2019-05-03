@@ -4,20 +4,17 @@
       Loading...
     </div>
     <div v-else>
-      <p class="title"> 
-        <label class="unit">Used {{getUtilities(type).getUnit()}} Unit</label> | <label class="price">{{getUtilities(type).getMonthlyPrice()}} THB</label>
+      <p class="title">
+        <label class="unit">Used {{ formatNumber(getUtilities(type).getUnit()) }} Unit</label> |
+        <label class="price">~{{ formatNumber(getUtilities(type).getMonthlyPrice()) }} THB</label>
       </p>
 
-      <input type="number" v-model="inputText" @keyup="v => (v.code === 'Enter') ? submit() : undefined">
+      <input type="number" v-model="inputText" @keyup="v => (v.code === 'Enter' ? submit() : undefined)" />
       <button @click="submit">Submit</button>
-
-      <ul :key="$route.fullPath">
-        <li v-for="unit in getUtilities(type).list()">{{unit.number}} - {{new Date(unit.timestamp)}}</li>
-      </ul>
     </div>
 
     <div :key="$route.fullPath">
-      <chart v-if="getUtilities(type).list() > 0" :chartdata="datasets" :type="type"></chart>
+      <chart :chart-data="datasets"></chart>
     </div>
   </div>
 </template>
@@ -47,8 +44,7 @@ export default Vue.extend({
         const units = snapshot.val();
         if (units && units.length > 0) {
           units.forEach((unit: { number: number; timestamp: number }) => {
-            const method = `add${this.type.substr(0, 1).toUpperCase() +
-              this.type.substring(1)}`;
+            const method = `add${this.type.substr(0, 1).toUpperCase() + this.type.substring(1)}`;
             this.$store.dispatch(method, unit);
           });
         }
@@ -66,9 +62,7 @@ export default Vue.extend({
 
           if (this.$store.state.inputPassword !== this.$store.state.password) {
             console.log(
-              `no matches (password) ?? ${
-                this.$store.state.inputPassword
-              } !== ${this.$store.state.password}`
+              `no matches (password) ?? ${this.$store.state.inputPassword} !== ${this.$store.state.password}`
             );
 
             this.$router.replace("/");
@@ -102,17 +96,18 @@ export default Vue.extend({
       return this.$route.query;
     },
     datasets(): object {
+      const data = this.getUtilities(this.type)
+        .list()
+        .map((d: Unit) => ({
+          t: d.timestamp,
+          y: d.number
+        }));
       return {
         datasets: [
           {
             label: this.type,
-            backgroundColor: "#f87979",
-            data: this.getUtilities(this.type)
-              .list()
-              .forEach((d: Unit) => ({
-                x: d.timestamp,
-                y: d.number
-              }))
+            backgroundColor: this.randomColor(),
+            data
           }
         ]
       };
@@ -125,8 +120,23 @@ export default Vue.extend({
     ])
   } as { [key: string]: any },
   methods: {
+    randomColor() {
+      var letters = "0123456789ABCDEF";
+      var color = "#";
+      for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    },
     getUtilities(type: string) {
       return this[this.type] as Utilities;
+    },
+    formatNumber(input: string | number): string {
+      if (typeof input !== "string" && typeof input !== "number") return "";
+      if (!input || input === "") return "";
+
+      if (typeof input === "string") input = parseFloat(input);
+      return input.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
     },
     submit() {
       const unit = {
@@ -135,8 +145,7 @@ export default Vue.extend({
       };
 
       const length = (this[this.type] as Utilities).length();
-      const method = `add${this.type.substr(0, 1).toUpperCase() +
-        this.type.substring(1)}`;
+      const method = `add${this.type.substr(0, 1).toUpperCase() + this.type.substring(1)}`;
 
       this.$store.commit(method, unit);
 

@@ -17,10 +17,5 @@ export default new Router({
       name: 'utilities',
       component: () => import('./views/Utilities.vue'),
     },
-    {
-      path: '/graph',
-      name: 'graph',
-      component: () => import('./views/Graph.vue'),
-    },
   ],
 });
