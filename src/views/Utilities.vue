@@ -158,7 +158,7 @@ export default Vue.extend({
     },
     submit() {
       const unit = {
-        number: parseInt(this.inputText, 10),
+        number: this.inputText,
         timestamp: +new Date()
       };
 
